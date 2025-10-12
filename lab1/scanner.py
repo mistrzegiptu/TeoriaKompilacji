@@ -3,19 +3,19 @@ from sly import Lexer
 
 class Scanner(Lexer):
 
-    tokens = {ID, INTNUM, FLOATNUM, DOTADD, DOTSUB, DOTMUL, DOTDIV, ADDASSIGN, SUBASSIGN, MULASSIGN, DIVASSIGN,
+    tokens = {ID, FLOATNUM, INTNUM, DOTADD, DOTSUB, DOTMUL, DOTDIV, ADDASSIGN, SUBASSIGN, MULASSIGN, DIVASSIGN,
               IF, ELSE, FOR, WHILE, PRINT, BREAK, CONTINUE, RETURN, EYE, ZEROS, ONES, 
               EQ, LT, LE, GT, GE, NE}
-    literals = {'+', '-', '*', '/', '=', ';', ':', ',', '.', '\"', '(', ')', '[', ']', '{', '}', '\''}
+    literals = {'+', '-', '*', '/', '=', ';', ':', '.', ',', '\"', '(', ')', '[', ']', '{', '}', '\''}
 
     ignore = ' \t'
 
-    FLOATNUM = r'[0-9]*\.[0-9]*'
-    INTNUM = r'[0-9]+'
-    DOTADD = r'.\+'
-    DOTSUB = r'.-'
-    DOTMUL = r'.\*'
-    DOTDIV = r'./'
+    FLOATNUM = r'[+-]?(\d+(\.\d*)([eE][+-]?\d+)?|\.\d+([eE][+-]?\d+)?)'
+    INTNUM = r'[+-]?[0-9]+'
+    DOTADD = r'\.\+'
+    DOTSUB = r'\.-'
+    DOTMUL = r'\.\*'
+    DOTDIV = r'\./'
     ADDASSIGN = r'\+='
     SUBASSIGN = r'-='
     MULASSIGN = r'\*='
