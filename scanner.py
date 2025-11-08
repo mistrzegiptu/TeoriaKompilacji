@@ -3,15 +3,16 @@ from sly import Lexer
 
 class Scanner(Lexer):
 
-    tokens = {ID, FLOATNUM, INTNUM, DOTADD, DOTSUB, DOTMUL, DOTDIV, ADDASSIGN, SUBASSIGN, MULASSIGN, DIVASSIGN,
+    tokens = {ID, FLOATNUM, INTNUM, STRING, DOTADD, DOTSUB, DOTMUL, DOTDIV, ADDASSIGN, SUBASSIGN, MULASSIGN, DIVASSIGN,
               IF, ELSE, FOR, WHILE, PRINT, BREAK, CONTINUE, RETURN, EYE, ZEROS, ONES, 
-              EQ, LT, LE, GT, GE, NE}
-    literals = {'+', '-', '*', '/', '=', ';', ':', '.', ',', '\"', '(', ')', '[', ']', '{', '}', '\''}
+              EQ, LE, GE, NE}
+    literals = {'+', '-', '*', '/', '=', ';', '>', '<', ':', '.', ',', '\"', '(', ')', '[', ']', '{', '}', '\''}
 
     ignore = ' \t'
 
-    FLOATNUM = r'[+-]?(\d+(\.\d*)([eE][+-]?\d+)?|\.\d+([eE][+-]?\d+)?)'
-    INTNUM = r'[+-]?[0-9]+'
+    FLOATNUM = r'(\d+(\.\d*)|\.\d+)([eE][+-]?\d+)?'
+    INTNUM = r'\d+'
+    STRING = r'"[^"]*"'
     DOTADD = r'\.\+'
     DOTSUB = r'\.-'
     DOTMUL = r'\.\*'
@@ -21,11 +22,9 @@ class Scanner(Lexer):
     MULASSIGN = r'\*='
     DIVASSIGN = r'/='
     EQ = r'=='
-    LE      = r'<='
-    LT      = r'<'
-    GE      = r'>='
-    GT      = r'>'
-    NE      = r'!='
+    LE = r'<='
+    GE = r'>='
+    NE = r'!='
 
     ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
     ID['if'] = IF
@@ -41,6 +40,7 @@ class Scanner(Lexer):
     ID['ones'] = ONES
 
     ignore_comment = r'\#.*'
+    
     @_(r'\n+')
     def ignore_newline(self, t):
         self.lineno += t.value.count('\n')
