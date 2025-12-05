@@ -12,7 +12,7 @@ class Scanner(Lexer):
 
     FLOATNUM = r'(\d+(\.\d*)|\.\d+)([eE][+-]?\d+)?'
     INTNUM = r'\d+'
-    STRING = r'"[^"]*"'
+    STRING = r'"[^"(\r\n|\r|\n)]*"'
     DOTADD = r'\.\+'
     DOTSUB = r'\.-'
     DOTMUL = r'\.\*'

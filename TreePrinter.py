@@ -50,7 +50,11 @@ class TreePrinter:
     def printTree(self, indent=0):
         print("|  " * indent + "IF")
         self.condition.printTree(indent + 1)
-        self.true_body.printTree(indent + 1)
+        if(type(self.true_body) is list):
+            for body in self.true_body:
+                body.printTree(indent + 1)
+        else:
+            self.true_body.printTree(indent + 1)
         if self.false_body:
             print("|  " * indent + "ELSE")
             self.false_body.printTree(indent + 1)
@@ -59,14 +63,22 @@ class TreePrinter:
     def printTree(self, indent=0):
         print("|  " * indent + "WHILE")
         self.condition.printTree(indent + 1)
-        self.body.printTree(indent + 1)
+        if(type(self.body) is list):
+            for b in self.body:
+                b.printTree(indent + 1)
+        else:
+            self.body.printTree(indent + 1)
 
     @addToClass(AST.For)
     def printTree(self, indent=0):
         print("|  " * indent + "FOR")
         self.var.printTree(indent + 1)
         self.range_expr.printTree(indent + 1)
-        self.body.printTree(indent + 1)
+        if(type(self.body) is list):
+            for b in self.body:
+                b.printTree(indent + 1)
+        else:
+            self.body.printTree(indent + 1)
 
     @addToClass(AST.Range)
     def printTree(self, indent=0):
@@ -97,11 +109,12 @@ class TreePrinter:
     def printTree(self, indent=0):
         print("|  " * indent + "MATRIX")
         for row in self.rows:
-            if isinstance(row, list):
+            if isinstance(row, list): # TODO: row
+                print("|  " * (indent+1) + "ROW")
                 for elem in row:
-                    elem.printTree(indent + 1)
+                    elem.printTree(indent + 2)
             else:
-                row.printTree(indent + 1)
+                row.printTree(indent + 2)
 
     @addToClass(AST.MatrixFunction)
     def printTree(self, indent=0):
