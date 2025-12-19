@@ -3,6 +3,7 @@ from TreePrinter import *
 from scanner import Scanner
 from parser import Mparser
 from AST import *
+from TypeChecker import *
 
 
 if __name__ == '__main__':
@@ -16,6 +17,9 @@ if __name__ == '__main__':
     parser = Mparser()
     
     ast = parser.parse(lexer.tokenize(text))
+    
+    typeChecker = TypeChecker()
+    typeChecker.visit(ast)
     #ast.printTree()
     #treePrinter = TreePrinter()
     

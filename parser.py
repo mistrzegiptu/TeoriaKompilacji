@@ -5,26 +5,17 @@ from AST import *
 class Mparser(Parser):
 
     tokens = Scanner.tokens
-
     debugfile = 'parser.out'
 
-    start = 'program'
-
     precedence = (
-    # to fill ...
         ('nonassoc', 'IFX'),
         ('nonassoc', 'ELSE'),
-        ('right', 'MULASSIGN', 'DIVASSIGN', 'SUBASSIGN', 'ADDASSIGN'),
-        ('nonassoc', 'EQ', 'NE', 'LE', 'GE', '>', '<'),
-        ("left", '+', '-'),
-        ("left", 'DOTADD', 'DOTSUB'),
-        ("left", "*", "/"),
-        ("left", 'DOTMUL', 'DOTDIV'),
-        ("right", 'UMINUS'),
-        ("left", "'")
-    # to fill ...
+        ('nonassoc', '<', '>', 'EQ', 'NE', 'GE', 'LE'),
+        ('left', '+', '-', 'DOTADD', 'DOTSUB'),
+        ('left', '*', '/', 'DOTMUL', 'DOTDIV'),
+        ('right', 'UMINUS'),
+        ('left', "'"),
     )
-
 
     @_('instructions_opt')
     def program(self, p):
@@ -60,27 +51,42 @@ class Mparser(Parser):
 
     @_('IF "(" condition ")" instruction %prec IFX')
     def instruction(self, p):
-        return If(p.condition, p.instruction)
+        node = If(p.condition, p.instruction)
+        node.lineno = p.lineno
+        return node
 
     @_('IF "(" condition ")" instruction ELSE instruction')
     def instruction(self, p):
-        return If(p.condition, p.instruction0, p.instruction1)
+        node = If(p.condition, p.instruction0, p.instruction1)
+        node.lineno = p.lineno
+        return node
 
     @_('WHILE "(" condition ")" instruction')
     def instruction(self, p):
-        return While(p.condition, p.instruction)
+        node = While(p.condition, p.instruction)
+        node.lineno = p.lineno
+        return node
 
     @_('FOR var "=" range instruction')
     def instruction(self, p):
-        return For(p.var, p.range, p.instruction)
+        node = For(p.var, p.range, p.instruction)
+        node.lineno = p.lineno
+        return node
 
     @_('expression ":" expression')
     def range(self, p):
         return Range(p.expression0, p.expression1)
     
-    @_('expression EQ expression', 'expression NE expression', 'expression LE expression', 'expression GE expression', 'expression ">" expression', 'expression "<" expression')
+    @_('expression EQ expression', 
+       'expression NE expression', 
+       'expression LE expression', 
+       'expression GE expression', 
+       'expression ">" expression', 
+       'expression "<" expression')
     def condition(self, p):
-        return RelExpr(p[1], p.expression0, p.expression1)
+        node = RelExpr(p[1], p.expression0, p.expression1)
+        node.lineno = p.expression0.lineno
+        return node
 
     @_('MULASSIGN', 'DIVASSIGN', 'SUBASSIGN', 'ADDASSIGN', '"="')
     def assignment_op(self, p):
@@ -88,19 +94,27 @@ class Mparser(Parser):
 
     @_('var assignment_op expression')
     def assignment(self, p):
-        return Assign(p.var, p.assignment_op, p.expression)
+        node = Assign(p.var, p.assignment_op, p.expression)
+        node.lineno = p.lineno
+        return node
 
     @_('matrix_element assignment_op expression')
     def assignment(self, p):
-        return Assign(p.matrix_element, p.assignment_op, p.expression)
+        node = Assign(p.matrix_element, p.assignment_op, p.expression)
+        node.lineno = p.lineno
+        return node
 
     @_('vector_element assignment_op expression')
     def assignment(self, p):
-        return Assign(p.vector_element, p.assignment_op, p.expression)
+        node = Assign(p.vector_element, p.assignment_op, p.expression)
+        node.lineno = p.lineno
+        return node
 
     @_('matrix_function_name "(" expression ")"')
     def matrix_function(self, p):
-        return MatrixFunction(p.matrix_function_name, p.expression)
+        node = MatrixFunction(p.matrix_function_name, p.expression)
+        node.lineno = p.lineno
+        return node
 
     @_('EYE', 'ONES', 'ZEROS')
     def matrix_function_name(self, p):
@@ -108,7 +122,9 @@ class Mparser(Parser):
 
     @_('"[" rows "]"')
     def matrix(self, p):
-        return Matrix(p.rows)
+        node = Matrix(p.rows)
+        node.lineno = p.lineno
+        return node
 
     @_('rows ";" row')
     def rows(self, p):
@@ -130,21 +146,15 @@ class Mparser(Parser):
     def variables(self, p):
         return [p.variable]
 
-    @_('number')
+    @_('number', 'var', 'element')
     def variable(self, p):
-        return p.number
-
-    @_('var')
-    def variable(self, p):
-        return p.var
-
-    @_('element')
-    def variable(self, p):
-        return p.element
+        return p[0]
 
     @_('"-" expression %prec UMINUS')
     def uminus(self, p):
-        return Uminus(p.expression)
+        node = Uminus(p.expression)
+        node.lineno = p.lineno
+        return node
 
     @_('matrix_element')
     def element(self, p):
@@ -156,87 +166,63 @@ class Mparser(Parser):
 
     @_('ID "[" expression "]"')
     def vector_element(self, p):
-        return VectorElement(p.ID, p.expression)
+        node = VectorElement(p.ID, p.expression)
+        node.lineno = p.lineno
+        return node
 
     @_('ID "[" expression "," expression "]"')
     def matrix_element(self, p):
-        return MatrixElement(p.ID, p.expression0, p.expression1)
+        node = MatrixElement(p.ID, p.expression0, p.expression1)
+        node.lineno = p.lineno
+        return node
 
     @_('ID')
     def var(self, p):
-        return Variable(p.ID)
+        node = Variable(p.ID)
+        node.lineno = p.lineno
+        return node
 
     @_('FLOATNUM')
     def number(self, p):
-        return FloatNum(p.FLOATNUM)
+        node = FloatNum(p.FLOATNUM)
+        node.lineno = p.lineno
+        return node
 
     @_('INTNUM')
     def number(self, p):
-        return IntNum(p.INTNUM)
+        node = IntNum(p.INTNUM)
+        node.lineno = p.lineno
+        return node
 
     @_('STRING')
     def string(self, p):
-        return String(p.STRING)
+        node = String(p.STRING)
+        node.lineno = p.lineno
+        return node
 
     @_('CONTINUE')
     def statement(self, p):
-        return Continue()
+        node = Continue()
+        node.lineno = p.lineno
+        return node
 
     @_('BREAK')
     def statement(self, p):
-        return Break()
+        node = Break()
+        node.lineno = p.lineno
+        return node
 
     @_('RETURN expression')
     def statement(self, p):
-        return Return(p.expression)
-
-    @_('expression "+" expression', 'expression "-" expression', 'expression "*" expression', 'expression "/" expression', 'expression DOTADD expression', 'expression DOTSUB expression', 'expression DOTMUL expression', 'expression DOTDIV expression')
-    def expression(self, p):
-        return BinExpr(p[1], p.expression0, p.expression1)
-
-    @_('num_expression')
-    def expression(self, p):
-        return p.num_expression
-
-    @_('matrix')
-    def expression(self, p):
-        return p.matrix
-
-    @_('matrix_function')
-    def expression(self, p):
-        return p.matrix_function
-
-    @_('transposition')
-    def expression(self, p):
-        return p.transposition
-
-    @_('matrix_element')
-    def expression(self, p):
-        return p.matrix_element
-
-    @_('vector_element')
-    def expression(self, p):
-        return p.vector_element
-
-    @_('uminus')
-    def expression(self, p):
-        return p.uminus
-
-    @_('number')
-    def num_expression(self, p):
-        return p.number
-
-    @_('var')
-    def num_expression(self, p):
-        return p.var
-
-    @_('expression "\'"')
-    def transposition(self, p):
-        return Transposition(p.expression)
+        node = Return(p.expression)
+        node.lineno = p.lineno
+        return node
 
     @_('PRINT print_vals')
     def statement(self, p):
-        return Print(p.print_vals)
+        node = Print(p.print_vals)
+        node.lineno = p.lineno
+        return node
 
     @_('print_vals "," print_val')
     def print_vals(self, p):
@@ -246,16 +232,39 @@ class Mparser(Parser):
     def print_vals(self, p):
         return [p.print_val]
 
-    @_('string')
+    @_('string', 'expression')
     def print_val(self, p):
-        return p.string
+        return p[0]
 
-    @_('expression')
-    def print_val(self, p):
-        return p.expression
+    @_('expression "+" expression', 
+       'expression "-" expression', 
+       'expression "*" expression', 
+       'expression "/" expression', 
+       'expression DOTADD expression', 
+       'expression DOTSUB expression', 
+       'expression DOTMUL expression', 
+       'expression DOTDIV expression')
+    def expression(self, p):
+        node = BinExpr(p[1], p.expression0, p.expression1)
+        node.lineno = p.lineno
+        return node
+
+    @_('num_expression', 'matrix', 'matrix_function', 'transposition', 'matrix_element', 'vector_element', 'uminus')
+    def expression(self, p):
+        return p[0]
+
+    @_('number', 'var')
+    def num_expression(self, p):
+        return p[0]
+
+    @_('expression "\'"')
+    def transposition(self, p):
+        node = Transposition(p.expression)
+        node.lineno = p.lineno
+        return node
 
     def error(self, p):
         if p:
-            print(f"Syntax error at line {p.lineno}: {p.type}('{p.value}')")
+            print(f"Syntax error at line {p.lineno}, token={p.type}, value='{p.value}'")
         else:
             print("Unexpected end of input")

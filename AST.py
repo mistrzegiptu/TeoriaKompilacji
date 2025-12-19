@@ -1,8 +1,11 @@
 
 
 class Node(object):
-    pass
+    def __init__(self):
+        self.lineno = 0 
 
+    def accept(self, visitor):
+        return visitor.visit(self)
 
 class IntNum(Node):
     def __init__(self, value):
@@ -116,10 +119,6 @@ class Assign(Node):
         self.left = left
         self.op = op
         self.right = right
-
-# ...
-# fill out missing classes
-# ...
 
 class Error(Node):
     def __init__(self):
