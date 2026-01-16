@@ -1,29 +1,32 @@
 import sys
-from TreePrinter import *
 from scanner import Scanner
 from parser import Mparser
-from AST import *
-from TypeChecker import *
-
+from TypeChecker import TypeChecker
+from Interpreter import Interpreter
 
 if __name__ == '__main__':
 
-    filename = sys.argv[1] if len(sys.argv) > 1 else "examples/init.m"
-    with open(filename, "r") as file:
-        text = file.read()
-
+    filename = sys.argv[1] if len(sys.argv) > 1 else "examples/opers.m"
+    try:
+        with open(filename, "r") as file:
+            text = file.read()
+    except IOError:
+        print(f"Cannot open file: {filename}")
+        sys.exit(0)
 
     lexer = Scanner()
     parser = Mparser()
     
     ast = parser.parse(lexer.tokenize(text))
     
-    typeChecker = TypeChecker()
-    typeChecker.visit(ast)
-    #ast.printTree()
-    #treePrinter = TreePrinter()
-    
-    # for tok in lexer.tokenize(text):
-    #     print(f"{tok.lineno}: {tok.type}({tok.value})")
-
-    TreePrinter.print_list(ast)
+    if ast:
+        # 1. Semantic Analysis
+        typeChecker = TypeChecker()
+        typeChecker.visit(ast)
+        
+        # 2. Interpretation (only if no semantic errors)
+        if not typeChecker.errors_found:
+            interpreter = Interpreter()
+            interpreter.visit(ast)
+        else:
+            print("Interpretation skipped due to semantic errors.")
