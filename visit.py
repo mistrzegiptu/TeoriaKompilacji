@@ -1,4 +1,3 @@
-# visit.py
 import inspect
 
 def on(param_name):

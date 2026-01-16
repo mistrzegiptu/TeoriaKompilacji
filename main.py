@@ -20,11 +20,9 @@ if __name__ == '__main__':
     ast = parser.parse(lexer.tokenize(text))
     
     if ast:
-        # 1. Semantic Analysis
         typeChecker = TypeChecker()
         typeChecker.visit(ast)
         
-        # 2. Interpretation (only if no semantic errors)
         if not typeChecker.errors_found:
             interpreter = Interpreter()
             interpreter.visit(ast)

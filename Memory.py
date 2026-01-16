@@ -21,19 +21,15 @@ class MemoryStack:
             self.stack.append(Memory("Global"))
 
     def get(self, name): 
-        # Search from top (most local) to bottom (global)
         for mem in reversed(self.stack):
             if mem.has_key(name):
                 return mem.get(name)
         return None
 
     def insert(self, name, value): 
-        # Insert into the current (top) scope
         self.stack[-1].put(name, value)
 
-    def set(self, name, value): 
-        # Update existing variable in the nearest scope, 
-        # or insert into current if not found anywhere
+    def set(self, name, value):
         for mem in reversed(self.stack):
             if mem.has_key(name):
                 mem.put(name, value)
