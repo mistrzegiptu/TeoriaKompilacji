@@ -130,9 +130,15 @@ class TypeChecker(NodeVisitor):
         return 'matrix'
 
     def visit_MatrixFunction(self, node):
-        arg_type = self.visit(node.expression)
-        if arg_type != 'int':
-            self.print_error(node, f"Function '{node.func_name}' argument must be an integer")
+        t1 = self.visit(node.dim1)
+        if t1 != 'int':
+            self.print_error(node, f"First argument of '{node.func_name}' must be an integer")
+        
+        if node.dim2:
+            t2 = self.visit(node.dim2)
+            if t2 != 'int':
+                self.print_error(node, f"Second argument of '{node.func_name}' must be an integer")
+        
         return 'matrix'
 
     def visit_VectorElement(self, node):
@@ -237,9 +243,12 @@ class TypeChecker(NodeVisitor):
             cols = len(node.rows[0]) if rows > 0 else 0
             return (rows, cols)
         if isinstance(node, AST.MatrixFunction):
-            if isinstance(node.expression, AST.IntNum):
-                val = int(node.expression.value)
-                return (val, val)
+            if isinstance(node.dim1, AST.IntNum):
+                rows = int(node.dim1.value)
+                cols = rows
+                if node.dim2 and isinstance(node.dim2, AST.IntNum):
+                    cols = int(node.dim2.value)
+                return (rows, cols)
         if isinstance(node, AST.Variable):
             sym = self.symbol_table.get(node.name)
             if sym and sym.size:

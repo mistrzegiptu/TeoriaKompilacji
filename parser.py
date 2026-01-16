@@ -116,6 +116,12 @@ class Mparser(Parser):
         node.lineno = p.lineno
         return node
 
+    @_('matrix_function_name "(" expression "," expression ")"')
+    def matrix_function(self, p):
+        node = MatrixFunction(p.matrix_function_name, p.expression0, p.expression1)
+        node.lineno = p.lineno
+        return node
+
     @_('EYE', 'ONES', 'ZEROS')
     def matrix_function_name(self, p):
         return p[0]
@@ -248,6 +254,11 @@ class Mparser(Parser):
         node = BinExpr(p[1], p.expression0, p.expression1)
         node.lineno = p.lineno
         return node
+
+    # --- ADDED: Rule for parentheses ---
+    @_('"(" expression ")"')
+    def expression(self, p):
+        return p.expression
 
     @_('num_expression', 'matrix', 'matrix_function', 'transposition', 'matrix_element', 'vector_element', 'uminus')
     def expression(self, p):

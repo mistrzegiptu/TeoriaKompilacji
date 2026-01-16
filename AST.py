@@ -82,9 +82,10 @@ class Matrix(Node):
         self.rows = rows
 
 class MatrixFunction(Node):
-    def __init__(self, func_name, expression):
+    def __init__(self, func_name, dim1, dim2=None):
         self.func_name = func_name
-        self.expression = expression
+        self.dim1 = dim1
+        self.dim2 = dim2
 
 class Transposition(Node):
     def __init__(self, expression):
