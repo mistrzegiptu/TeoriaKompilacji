@@ -32,7 +32,6 @@ class Interpreter(object):
     def visit(self, node):
         pass
 
-    # --- FIX: Handler for lists (root of AST and blocks) ---
     @when(list)
     def visit(self, node):
         r = None
@@ -61,6 +60,14 @@ class Interpreter(object):
         r1 = self.visit(node.left)
         r2 = self.visit(node.right)
         
+        if isinstance(r1, str) or isinstance(r2, str):
+            if node.op == '*':
+                return r1 * r2
+            elif node.op == '+':
+                return r1 + r2
+            else:
+                 raise Exception(f"Operation {node.op} not supported for strings in interpreter")
+            
         is_matrix = isinstance(r1, list) and isinstance(r2, list)
 
         if node.op == '+':
@@ -126,7 +133,6 @@ class Interpreter(object):
         if self.visit(node.condition):
             self.memoryStack.push(Memory("if"))
             try:
-                # Direct visit - the @when(list) handler will take care if it's a block
                 self.visit(node.true_body) 
             finally:
                 self.memoryStack.pop()
@@ -154,9 +160,7 @@ class Interpreter(object):
     @when(AST.For)
     def visit(self, node):
         start, end = self.visit(node.range_expr)
-        # Handle inclusive range standard
         step = 1 if start <= end else -1
-        # Python's range is exclusive at the end, so we add/subtract step to make it inclusive
         rng = range(start, end + step, step)
         
         for i in rng:

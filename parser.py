@@ -238,7 +238,7 @@ class Mparser(Parser):
     def print_vals(self, p):
         return [p.print_val]
 
-    @_('string', 'expression')
+    @_('expression')
     def print_val(self, p):
         return p[0]
 
@@ -255,12 +255,11 @@ class Mparser(Parser):
         node.lineno = p.lineno
         return node
 
-    # --- ADDED: Rule for parentheses ---
     @_('"(" expression ")"')
     def expression(self, p):
         return p.expression
 
-    @_('num_expression', 'matrix', 'matrix_function', 'transposition', 'matrix_element', 'vector_element', 'uminus')
+    @_('num_expression', 'matrix', 'matrix_function', 'transposition', 'matrix_element', 'vector_element', 'uminus', 'string')
     def expression(self, p):
         return p[0]
 

@@ -58,7 +58,7 @@ Rule 54    statement -> CONTINUE
 Rule 55    print_vals -> print_val
 Rule 56    print_vals -> print_vals , print_val
 Rule 57    print_val -> expression
-Rule 58    print_val -> string
+Rule 58    expression -> string
 Rule 59    expression -> uminus
 Rule 60    expression -> vector_element
 Rule 61    expression -> matrix_element
@@ -366,7 +366,7 @@ state 12
     (55) print_vals -> . print_val
     (56) print_vals -> . print_vals , print_val
     (57) print_val -> . expression
-    (58) print_val -> . string
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -428,6 +428,7 @@ state 12
 state 13
 
     (52) statement -> RETURN . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -444,6 +445,7 @@ state 13
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -460,6 +462,7 @@ state 13
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -470,6 +473,7 @@ state 13
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 56
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -598,6 +602,7 @@ state 21
 state 22
 
     (27) assignment -> var assignment_op . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -614,6 +619,7 @@ state 22
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -630,6 +636,7 @@ state 22
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -641,6 +648,7 @@ state 22
 
     var                            shift and go to state 49
     expression                     shift and go to state 61
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -655,6 +663,7 @@ state 23
 
     (20) assignment_op -> = .
     (               reduce using rule 20 (assignment_op -> = .)
+    STRING          reduce using rule 20 (assignment_op -> = .)
     -               reduce using rule 20 (assignment_op -> = .)
     ID              reduce using rule 20 (assignment_op -> = .)
     [               reduce using rule 20 (assignment_op -> = .)
@@ -669,6 +678,7 @@ state 24
 
     (21) assignment_op -> ADDASSIGN .
     (               reduce using rule 21 (assignment_op -> ADDASSIGN .)
+    STRING          reduce using rule 21 (assignment_op -> ADDASSIGN .)
     -               reduce using rule 21 (assignment_op -> ADDASSIGN .)
     ID              reduce using rule 21 (assignment_op -> ADDASSIGN .)
     [               reduce using rule 21 (assignment_op -> ADDASSIGN .)
@@ -683,6 +693,7 @@ state 25
 
     (22) assignment_op -> SUBASSIGN .
     (               reduce using rule 22 (assignment_op -> SUBASSIGN .)
+    STRING          reduce using rule 22 (assignment_op -> SUBASSIGN .)
     -               reduce using rule 22 (assignment_op -> SUBASSIGN .)
     ID              reduce using rule 22 (assignment_op -> SUBASSIGN .)
     [               reduce using rule 22 (assignment_op -> SUBASSIGN .)
@@ -697,6 +708,7 @@ state 26
 
     (23) assignment_op -> DIVASSIGN .
     (               reduce using rule 23 (assignment_op -> DIVASSIGN .)
+    STRING          reduce using rule 23 (assignment_op -> DIVASSIGN .)
     -               reduce using rule 23 (assignment_op -> DIVASSIGN .)
     ID              reduce using rule 23 (assignment_op -> DIVASSIGN .)
     [               reduce using rule 23 (assignment_op -> DIVASSIGN .)
@@ -711,6 +723,7 @@ state 27
 
     (24) assignment_op -> MULASSIGN .
     (               reduce using rule 24 (assignment_op -> MULASSIGN .)
+    STRING          reduce using rule 24 (assignment_op -> MULASSIGN .)
     -               reduce using rule 24 (assignment_op -> MULASSIGN .)
     ID              reduce using rule 24 (assignment_op -> MULASSIGN .)
     [               reduce using rule 24 (assignment_op -> MULASSIGN .)
@@ -730,6 +743,7 @@ state 28
     (17) condition -> . expression LE expression
     (18) condition -> . expression NE expression
     (19) condition -> . expression EQ expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -746,6 +760,7 @@ state 28
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -762,6 +777,7 @@ state 28
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -773,6 +789,7 @@ state 28
 
     condition                      shift and go to state 62
     expression                     shift and go to state 63
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -794,6 +811,7 @@ state 29
     (17) condition -> . expression LE expression
     (18) condition -> . expression NE expression
     (19) condition -> . expression EQ expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -810,6 +828,7 @@ state 29
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -826,6 +845,7 @@ state 29
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -837,6 +857,7 @@ state 29
 
     condition                      shift and go to state 64
     expression                     shift and go to state 63
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -963,9 +984,36 @@ state 35
 
 state 36
 
-    (58) print_val -> string .
-    ,               reduce using rule 58 (print_val -> string .)
-    ;               reduce using rule 58 (print_val -> string .)
+    (58) expression -> string .
+    DOTDIV          reduce using rule 58 (expression -> string .)
+    DOTMUL          reduce using rule 58 (expression -> string .)
+    DOTSUB          reduce using rule 58 (expression -> string .)
+    DOTADD          reduce using rule 58 (expression -> string .)
+    /               reduce using rule 58 (expression -> string .)
+    *               reduce using rule 58 (expression -> string .)
+    -               reduce using rule 58 (expression -> string .)
+    +               reduce using rule 58 (expression -> string .)
+    '               reduce using rule 58 (expression -> string .)
+    ,               reduce using rule 58 (expression -> string .)
+    ;               reduce using rule 58 (expression -> string .)
+    <               reduce using rule 58 (expression -> string .)
+    >               reduce using rule 58 (expression -> string .)
+    GE              reduce using rule 58 (expression -> string .)
+    LE              reduce using rule 58 (expression -> string .)
+    NE              reduce using rule 58 (expression -> string .)
+    EQ              reduce using rule 58 (expression -> string .)
+    )               reduce using rule 58 (expression -> string .)
+    ]               reduce using rule 58 (expression -> string .)
+    :               reduce using rule 58 (expression -> string .)
+    FOR             reduce using rule 58 (expression -> string .)
+    WHILE           reduce using rule 58 (expression -> string .)
+    IF              reduce using rule 58 (expression -> string .)
+    {               reduce using rule 58 (expression -> string .)
+    PRINT           reduce using rule 58 (expression -> string .)
+    RETURN          reduce using rule 58 (expression -> string .)
+    BREAK           reduce using rule 58 (expression -> string .)
+    CONTINUE        reduce using rule 58 (expression -> string .)
+    ID              reduce using rule 58 (expression -> string .)
 
 
 state 37
@@ -1209,6 +1257,7 @@ state 43
 state 44
 
     (66) expression -> ( . expression )
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -1225,6 +1274,7 @@ state 44
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -1241,6 +1291,7 @@ state 44
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -1251,6 +1302,7 @@ state 44
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 76
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -1265,6 +1317,7 @@ state 44
 state 45
 
     (42) uminus -> - . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -1281,6 +1334,7 @@ state 45
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -1297,6 +1351,7 @@ state 45
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -1307,6 +1362,7 @@ state 45
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 77
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -1321,8 +1377,35 @@ state 45
 state 46
 
     (50) string -> STRING .
+    DOTDIV          reduce using rule 50 (string -> STRING .)
+    DOTMUL          reduce using rule 50 (string -> STRING .)
+    DOTSUB          reduce using rule 50 (string -> STRING .)
+    DOTADD          reduce using rule 50 (string -> STRING .)
+    /               reduce using rule 50 (string -> STRING .)
+    *               reduce using rule 50 (string -> STRING .)
+    -               reduce using rule 50 (string -> STRING .)
+    +               reduce using rule 50 (string -> STRING .)
+    '               reduce using rule 50 (string -> STRING .)
     ,               reduce using rule 50 (string -> STRING .)
     ;               reduce using rule 50 (string -> STRING .)
+    <               reduce using rule 50 (string -> STRING .)
+    >               reduce using rule 50 (string -> STRING .)
+    GE              reduce using rule 50 (string -> STRING .)
+    LE              reduce using rule 50 (string -> STRING .)
+    NE              reduce using rule 50 (string -> STRING .)
+    EQ              reduce using rule 50 (string -> STRING .)
+    )               reduce using rule 50 (string -> STRING .)
+    ]               reduce using rule 50 (string -> STRING .)
+    :               reduce using rule 50 (string -> STRING .)
+    FOR             reduce using rule 50 (string -> STRING .)
+    WHILE           reduce using rule 50 (string -> STRING .)
+    IF              reduce using rule 50 (string -> STRING .)
+    {               reduce using rule 50 (string -> STRING .)
+    PRINT           reduce using rule 50 (string -> STRING .)
+    RETURN          reduce using rule 50 (string -> STRING .)
+    BREAK           reduce using rule 50 (string -> STRING .)
+    CONTINUE        reduce using rule 50 (string -> STRING .)
+    ID              reduce using rule 50 (string -> STRING .)
 
 
 state 47
@@ -1545,6 +1628,7 @@ state 56
 state 57
 
     (25) assignment -> vector_element assignment_op . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -1561,6 +1645,7 @@ state 57
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -1577,6 +1662,7 @@ state 57
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -1588,6 +1674,7 @@ state 57
 
     vector_element                 shift and go to state 38
     expression                     shift and go to state 89
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     matrix_element                 shift and go to state 39
     transposition                  shift and go to state 40
@@ -1601,6 +1688,7 @@ state 57
 state 58
 
     (26) assignment -> matrix_element assignment_op . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -1617,6 +1705,7 @@ state 58
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -1633,6 +1722,7 @@ state 58
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -1644,6 +1734,7 @@ state 58
 
     matrix_element                 shift and go to state 39
     expression                     shift and go to state 90
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     transposition                  shift and go to state 40
@@ -1658,6 +1749,7 @@ state 59
 
     (45) vector_element -> ID [ . expression ]
     (46) matrix_element -> ID [ . expression , expression ]
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -1674,6 +1766,7 @@ state 59
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -1690,6 +1783,7 @@ state 59
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -1700,6 +1794,7 @@ state 59
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 91
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -1715,6 +1810,7 @@ state 60
 
     (6) instruction -> FOR var = . range instruction
     (13) range -> . expression : expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -1731,6 +1827,7 @@ state 60
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -1747,6 +1844,7 @@ state 60
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -1759,6 +1857,7 @@ state 60
     var                            shift and go to state 49
     range                          shift and go to state 92
     expression                     shift and go to state 93
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -1861,7 +1960,7 @@ state 66
 
     (56) print_vals -> print_vals , . print_val
     (57) print_val -> . expression
-    (58) print_val -> . string
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -1922,6 +2021,7 @@ state 66
 state 67
 
     (67) expression -> expression DOTDIV . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -1938,6 +2038,7 @@ state 67
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -1954,6 +2055,7 @@ state 67
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -1964,6 +2066,7 @@ state 67
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 103
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -1978,6 +2081,7 @@ state 67
 state 68
 
     (68) expression -> expression DOTMUL . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -1994,6 +2098,7 @@ state 68
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -2010,6 +2115,7 @@ state 68
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -2020,6 +2126,7 @@ state 68
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 104
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -2034,6 +2141,7 @@ state 68
 state 69
 
     (69) expression -> expression DOTSUB . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -2050,6 +2158,7 @@ state 69
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -2066,6 +2175,7 @@ state 69
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -2076,6 +2186,7 @@ state 69
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 105
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -2090,6 +2201,7 @@ state 69
 state 70
 
     (70) expression -> expression DOTADD . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -2106,6 +2218,7 @@ state 70
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -2122,6 +2235,7 @@ state 70
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -2132,6 +2246,7 @@ state 70
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 106
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -2146,6 +2261,7 @@ state 70
 state 71
 
     (71) expression -> expression / . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -2162,6 +2278,7 @@ state 71
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -2178,6 +2295,7 @@ state 71
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -2188,6 +2306,7 @@ state 71
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 107
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -2202,6 +2321,7 @@ state 71
 state 72
 
     (72) expression -> expression * . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -2218,6 +2338,7 @@ state 72
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -2234,6 +2355,7 @@ state 72
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -2244,6 +2366,7 @@ state 72
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 108
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -2258,6 +2381,7 @@ state 72
 state 73
 
     (73) expression -> expression - . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -2274,6 +2398,7 @@ state 73
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -2290,6 +2415,7 @@ state 73
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -2300,6 +2426,7 @@ state 73
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 109
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -2314,6 +2441,7 @@ state 73
 state 74
 
     (74) expression -> expression + . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -2330,6 +2458,7 @@ state 74
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -2346,6 +2475,7 @@ state 74
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -2356,6 +2486,7 @@ state 74
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 110
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -2555,6 +2686,7 @@ state 88
 
     (28) matrix_function -> matrix_function_name ( . expression , expression )
     (29) matrix_function -> matrix_function_name ( . expression )
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -2571,6 +2703,7 @@ state 88
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -2587,6 +2720,7 @@ state 88
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -2598,6 +2732,7 @@ state 88
 
     matrix_function_name           shift and go to state 48
     expression                     shift and go to state 115
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -2783,6 +2918,7 @@ state 94
 state 95
 
     (14) condition -> expression < . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -2799,6 +2935,7 @@ state 95
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -2815,6 +2952,7 @@ state 95
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -2825,6 +2963,7 @@ state 95
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 121
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -2839,6 +2978,7 @@ state 95
 state 96
 
     (15) condition -> expression > . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -2855,6 +2995,7 @@ state 96
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -2871,6 +3012,7 @@ state 96
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -2881,6 +3023,7 @@ state 96
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 122
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -2895,6 +3038,7 @@ state 96
 state 97
 
     (16) condition -> expression GE . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -2911,6 +3055,7 @@ state 97
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -2927,6 +3072,7 @@ state 97
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -2937,6 +3083,7 @@ state 97
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 123
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -2951,6 +3098,7 @@ state 97
 state 98
 
     (17) condition -> expression LE . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -2967,6 +3115,7 @@ state 98
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -2983,6 +3132,7 @@ state 98
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -2993,6 +3143,7 @@ state 98
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 124
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -3007,6 +3158,7 @@ state 98
 state 99
 
     (18) condition -> expression NE . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -3023,6 +3175,7 @@ state 99
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -3039,6 +3192,7 @@ state 99
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -3049,6 +3203,7 @@ state 99
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 125
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -3063,6 +3218,7 @@ state 99
 state 100
 
     (19) condition -> expression EQ . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -3079,6 +3235,7 @@ state 100
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -3095,6 +3252,7 @@ state 100
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -3105,6 +3263,7 @@ state 100
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 126
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -3694,6 +3853,7 @@ state 116
 state 117
 
     (46) matrix_element -> ID [ expression , . expression ]
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -3710,6 +3870,7 @@ state 117
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -3726,6 +3887,7 @@ state 117
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -3736,6 +3898,7 @@ state 117
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 132
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -3767,6 +3930,7 @@ state 118
 state 119
 
     (13) range -> expression : . expression
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -3783,6 +3947,7 @@ state 119
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -3799,6 +3964,7 @@ state 119
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -3809,6 +3975,7 @@ state 119
     FLOATNUM        shift and go to state 55
 
     expression                     shift and go to state 133
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39
@@ -4017,6 +4184,7 @@ state 129
 state 130
 
     (28) matrix_function -> matrix_function_name ( expression , . expression )
+    (58) expression -> . string
     (59) expression -> . uminus
     (60) expression -> . vector_element
     (61) expression -> . matrix_element
@@ -4033,6 +4201,7 @@ state 130
     (72) expression -> . expression * expression
     (73) expression -> . expression - expression
     (74) expression -> . expression + expression
+    (50) string -> . STRING
     (42) uminus -> . - expression
     (45) vector_element -> . ID [ expression ]
     (46) matrix_element -> . ID [ expression , expression ]
@@ -4049,6 +4218,7 @@ state 130
     (48) number -> . INTNUM
     (49) number -> . FLOATNUM
     (               shift and go to state 44
+    STRING          shift and go to state 46
     -               shift and go to state 45
     ID              shift and go to state 18
     [               shift and go to state 47
@@ -4060,6 +4230,7 @@ state 130
 
     matrix_function_name           shift and go to state 48
     expression                     shift and go to state 135
+    string                         shift and go to state 36
     uminus                         shift and go to state 37
     vector_element                 shift and go to state 38
     matrix_element                 shift and go to state 39

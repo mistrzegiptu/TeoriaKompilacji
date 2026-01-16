@@ -48,6 +48,13 @@ class TypeChecker(NodeVisitor):
         if type1 is None or type2 is None:
             return None
 
+        if (type1 == 'string' and type2 == 'int') or (type1 == 'int' and type2 == 'string'):
+            if op == '*':
+                return 'string'
+            else:
+                self.print_error(node, f"Cannot use '{op}' between string and int (only '*' allowed)")
+                return None
+
         dims1 = self.get_dims(node.left)
         dims2 = self.get_dims(node.right)
 

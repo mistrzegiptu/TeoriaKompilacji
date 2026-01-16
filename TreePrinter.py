@@ -109,7 +109,7 @@ class TreePrinter:
     def printTree(self, indent=0):
         print("|  " * indent + "MATRIX")
         for row in self.rows:
-            if isinstance(row, list): # TODO: row
+            if isinstance(row, list):
                 print("|  " * (indent+1) + "ROW")
                 for elem in row:
                     elem.printTree(indent + 2)
@@ -159,7 +159,6 @@ class TreePrinter:
     def printTree(self, indent=0):
         print("|  " * indent + "ERROR")
 
-    # Handle list of instructions
     @staticmethod
     def print_list(nodes, indent=0):
         for node in nodes:
