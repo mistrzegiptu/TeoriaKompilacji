@@ -3,6 +3,7 @@ from Memory import *
 from Exceptions import *
 from visit import *
 import sys
+import operator
 
 sys.setrecursionlimit(10000)
 
@@ -24,6 +25,33 @@ def mat_dot_div(A, B):
     return [[a / b for a, b in zip(rowA, rowB)] for rowA, rowB in zip(A, B)]
 
 class Interpreter(object):
+    
+    rel_ops = {
+        '==': operator.eq,
+        '!=': operator.ne,
+        '<':  operator.lt,
+        '>':  operator.gt,
+        '<=': operator.le,
+        '>=': operator.ge,
+    }
+
+    bin_ops = {
+        '+': operator.add,
+        '-': operator.sub,
+        '*': operator.mul,
+        '/': operator.truediv,
+    }
+
+    mat_ops = {
+        '+': mat_add,
+        '-': mat_sub,
+        '*': mat_mul,
+        '/': lambda x,y: None,
+        '.+': mat_add,
+        '.-': mat_sub,
+        '.*': mat_dot_mul,
+        './': mat_dot_div,
+    }
 
     def __init__(self):
         self.memoryStack = MemoryStack()
@@ -61,31 +89,17 @@ class Interpreter(object):
         r2 = self.visit(node.right)
         
         if isinstance(r1, str) or isinstance(r2, str):
-            if node.op == '*':
-                return r1 * r2
-            elif node.op == '+':
-                return r1 + r2
-            else:
-                 raise Exception(f"Operation {node.op} not supported for strings in interpreter")
+            if node.op == '*': return r1 * r2
+            if node.op == '+': return r1 + r2
+            raise Exception(f"Operation {node.op} not supported for strings in interpreter")
             
-        is_matrix = isinstance(r1, list) and isinstance(r2, list)
+        if isinstance(r1, list) and isinstance(r2, list):
+            if node.op in self.mat_ops:
+                return self.mat_ops[node.op](r1, r2)
+            raise Exception(f"Operation {node.op} not supported for matrices")
 
-        if node.op == '+':
-            return mat_add(r1, r2) if is_matrix else r1 + r2
-        elif node.op == '-':
-            return mat_sub(r1, r2) if is_matrix else r1 - r2
-        elif node.op == '*':
-            return mat_mul(r1, r2) if is_matrix else r1 * r2
-        elif node.op == '/':
-            return r1 / r2
-        elif node.op == '.+':
-            return mat_add(r1, r2)
-        elif node.op == '.-':
-            return mat_sub(r1, r2)
-        elif node.op == '.*':
-            return mat_dot_mul(r1, r2)
-        elif node.op == './':
-            return mat_dot_div(r1, r2)
+        if node.op in self.bin_ops:
+            return self.bin_ops[node.op](r1, r2)
         
         return None
 
@@ -93,13 +107,11 @@ class Interpreter(object):
     def visit(self, node):
         r1 = self.visit(node.left)
         r2 = self.visit(node.right)
-        if node.op == '==': return r1 == r2
-        if node.op == '!=': return r1 != r2
-        if node.op == '<': return r1 < r2
-        if node.op == '>': return r1 > r2
-        if node.op == '<=': return r1 <= r2
-        if node.op == '>=': return r1 >= r2
-        return False
+        
+        if node.op in self.rel_ops:
+            return self.rel_ops[node.op](r1, r2)
+        
+        raise Exception(f"Unknown relational operator: {node.op}")
 
     @when(AST.Assign)
     def visit(self, node):
@@ -110,11 +122,13 @@ class Interpreter(object):
                 self.memoryStack.set(node.left.name, val)
             else:
                 current_val = self.memoryStack.get(node.left.name)
-                if node.op == '+=': new_val = current_val + val
-                elif node.op == '-=': new_val = current_val - val
-                elif node.op == '*=': new_val = current_val * val
-                elif node.op == '/=': new_val = current_val / val
-                self.memoryStack.set(node.left.name, new_val)
+                op_map = {'+=': '+', '-=': '-', '*=': '*', '/=': '/'}
+                
+                if node.op in op_map:
+                    base_op = op_map[node.op]
+                    if base_op in self.bin_ops:
+                        new_val = self.bin_ops[base_op](current_val, val)
+                        self.memoryStack.set(node.left.name, new_val)
 
         elif isinstance(node.left, (AST.VectorElement, AST.MatrixElement)):
             matrix_name = node.left.name
@@ -161,6 +175,7 @@ class Interpreter(object):
     def visit(self, node):
         start, end = self.visit(node.range_expr)
         step = 1 if start <= end else -1
+
         rng = range(start, end + step, step)
         
         for i in rng:
@@ -237,5 +252,4 @@ class Interpreter(object):
     @when(AST.Return)
     def visit(self, node):
         val = self.visit(node.expression)
-        print(f"RETURN: {val}")
-        sys.exit(0)
+        raise ReturnValueException(val)
